@@ -2,7 +2,7 @@ import earthaccess
 import xarray as xr
 
 
-def warp_resample(dataset):
+def transpose_dataset():
     src = "s3://gesdisc-cumulus-prod-protected/GPM_L3/GPM_3IMERGDE.07/2002/06/3B-DAY-E.MS.MRG.3IMERG.20020601-S000000-E235959.V07B.nc4"
     earthaccess.login()
     fs = earthaccess.get_s3fs_session(daac="GES_DISC")
@@ -16,4 +16,4 @@ def warp_resample(dataset):
 
 
 if __name__ == "__main__":
-    da = warp_resample("gpm_imerg")
+    da = transpose_dataset()

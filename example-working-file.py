@@ -2,7 +2,7 @@ import earthaccess
 import xarray as xr
 
 
-def download_dataset(dataset):
+def download_dataset():
     earthaccess.login()
     results = earthaccess.search_data(
         concept_id="C2723754850-GES_DISC",
@@ -12,7 +12,7 @@ def download_dataset(dataset):
     earthaccess.download(results, "")[0]
 
 
-def warp_resample(dataset):
+def transpose_dataset():
     src = "3B-DAY-E.MS.MRG.3IMERG.20020601-S000000-E235959.V07B.nc4"
     da = xr.open_dataset(src, engine="h5netcdf", mask_and_scale=True)["precipitation"]
     da = da.rename({"lon": "x", "lat": "y"}).transpose("time", "y", "x")
@@ -20,6 +20,5 @@ def warp_resample(dataset):
 
 
 if __name__ == "__main__":
-    dataset = "gpm_imerg"
-    download_dataset(dataset)
-    da = warp_resample(dataset)
+    download_dataset()
+    da = transpose_dataset()
