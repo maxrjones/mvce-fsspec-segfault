@@ -1,6 +1,5 @@
 import earthaccess
 import xarray as xr
-from rasterio.warp import calculate_default_transform
 
 
 def download_dataset(dataset):
@@ -15,33 +14,9 @@ def download_dataset(dataset):
 
 def warp_resample(dataset):
     src = "3B-DAY-E.MS.MRG.3IMERG.20020601-S000000-E235959.V07B.nc4"
-    dstSRS = "EPSG:3857"
-    srcSRS = "EPSG:4326"
-    width = height = 256
-    te = [
-        -20037508.342789244,
-        -20037508.342789244,
-        20037508.342789244,
-        20037508.342789244,
-    ]
-
     da = xr.open_dataset(src, engine="h5netcdf", mask_and_scale=True)["precipitation"]
     da = da.rename({"lon": "x", "lat": "y"}).transpose("time", "y", "x")
-    da = da.rio.write_crs(srcSRS)
-    da = da.rio.clip_box(
-        *te,
-        crs=dstSRS,
-    )
-    dst_transform, w, h = calculate_default_transform(
-        srcSRS,
-        dstSRS,
-        da.rio.width,
-        da.rio.height,
-        *da.rio.bounds(),
-        dst_width=width,
-        dst_height=height,
-    )
-    return da.rio.reproject(dstSRS, shape=(h, w), transform=dst_transform)
+    return da
 
 
 if __name__ == "__main__":
